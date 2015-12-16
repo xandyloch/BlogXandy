@@ -45,8 +45,21 @@ namespace BlogXandy.Web.Controllers
             var qtdeRegistrosPular = (indiceDaPagina * registroPorPagina);
             var qtdePaginas = Math.Ceiling((decimal)qtdeRegistros / (decimal)registroPorPagina);
 
-            viewModel.Posts = (from p in posts orderby p.DataPublicacao descending select p).Skip(qtdeRegistrosPular).Take(registroPorPagina).ToList();
+            //viewModel.Posts = (from p in posts orderby p.DataPublicacao descending select p).Skip(qtdeRegistrosPular).Take(registroPorPagina).ToList();
+            viewModel.Posts = (from p in posts
+                               orderby p.DataPublicacao descending
+                               select new DetalharPostViewModel {
 
+                                   DataPublicacao = p.DataPublicacao,
+                                   Autor = p.Autor,
+                                   Descricao = p.Descricao,
+                                   id = p.Id,
+                                   Resumo = p.Resumo,
+                                   Titulo = p.Titulo,
+                                   Visivel = p.Visivel,
+                                   QtdeComentarios = p.comentario.Count,
+
+                                    }).Skip(qtdeRegistrosPular).Take(registroPorPagina).ToList();
             viewModel.PaginaAtual = paginaCorreta;
             viewModel.TotalPaginas = (int)qtdePaginas;
             viewModel.tag = tag;
@@ -66,7 +79,7 @@ namespace BlogXandy.Web.Controllers
             return PartialView();
         }
 
-        public ActionResult Post(int id)
+        public ActionResult Post(int id, int? pagina)
         {
             var conexaoBanco = new ConexaoBanco();
             var posts = (from x in conexaoBanco.Posts
@@ -74,21 +87,91 @@ namespace BlogXandy.Web.Controllers
                          select x).FirstOrDefault();
 
             var viewModel = new DetalharPostViewModel();
-            viewModel.id     = posts.Id;
+            PreencherViewModel(posts, viewModel, pagina);
+
+
+            /*viewModel.Tags = (from p in 
+                              select p.IdTag).ToList();*/
+
+            return View(viewModel);
+        }
+
+        private  void PreencherViewModel(Post posts, DetalharPostViewModel viewModel, int? pagina)
+        {
+
+
+            viewModel.id = posts.Id;
             viewModel.Resumo = posts.Resumo;
             viewModel.Titulo = posts.Titulo;
             viewModel.Visivel = posts.Visivel;
             viewModel.Autor = posts.Autor;
             viewModel.DataPublicacao = posts.DataPublicacao;
             viewModel.Descricao = posts.Descricao;
-
+            viewModel.QtdeComentarios = posts.comentario.Count;
             viewModel.Tags = (from p in posts.tagpost
                               select p.IdTag).ToList();
 
-            
-            /*viewModel.Tags = (from p in 
-                              select p.IdTag).ToList();*/
+            var paginaCorreta = pagina.GetValueOrDefault(1);
+            var registroPorPagina = 10;
 
+            var qtdeRegistros = posts.comentario.Count();
+            var indiceDaPagina = paginaCorreta - 1;
+            var qtdeRegistrosPular = (indiceDaPagina * registroPorPagina);
+            var qtdePaginas = Math.Ceiling((decimal)qtdeRegistros / (decimal)registroPorPagina);
+
+            viewModel.Comentario = (from p in posts.comentario
+                                    orderby p.DataHora descending
+                                    select p).Skip(qtdeRegistrosPular).Take(registroPorPagina).ToList();
+            viewModel.PaginaAtual = paginaCorreta;
+            viewModel.TotalPaginas = (int)qtdePaginas;
+            
+        }
+
+        [HttpPost]
+        public ActionResult Post(DetalharPostViewModel viewModel)
+        {
+            var conexaoBanco = new ConexaoBanco();
+            var post = (from p in conexaoBanco.Posts
+                        where p.Id == viewModel.id
+                        select p).FirstOrDefault();
+            if (ModelState.IsValid)
+            {
+                
+                if(post == null)
+                {
+                    throw new Exception(string.Format("Post código {0} não encontrado.", viewModel.id));
+                }
+
+                var comentario = new Comentario();
+                comentario.AdmPost = HttpContext.User.Identity.IsAuthenticated;
+                comentario.Descricao = viewModel.ComentarioDescricao;
+                comentario.Email = viewModel.ComentarioEmail;
+                comentario.IdPost = viewModel.id;
+                comentario.Nome = viewModel.ComentarioNome;
+                comentario.PaginaWeb = viewModel.ComentarioPaginaWeb;
+                comentario.DataHora = DateTime.Now;
+
+                try
+                {
+                    conexaoBanco.Comentarios.Add(comentario);
+                    conexaoBanco.SaveChanges();
+                    return Redirect(Url.Action("Post", new
+                    {
+                        ano = post.DataPublicacao.Year,
+                        mes = post.DataPublicacao.Month,
+                        dia = post.DataPublicacao.Day,
+                        titulo = post.Titulo,
+                        id = post.Id
+
+                    })+"#comentarios");
+                }
+                catch( Exception exp)
+                {
+                    ModelState.AddModelError("", exp.Message);
+                }
+
+            }
+            PreencherViewModel(post, viewModel, null);
             return View(viewModel);
         }
     }

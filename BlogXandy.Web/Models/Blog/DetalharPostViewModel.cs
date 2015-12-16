@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlogXandy.db.Classes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -9,6 +10,7 @@ namespace BlogXandy.Web.Models.Blog
 {
     public class DetalharPostViewModel
     {
+        
         public int id { get; set; }
         public string Titulo { get; set; }
         public string Autor { get; set; }
@@ -18,7 +20,9 @@ namespace BlogXandy.Web.Models.Blog
         public DateTime HoraPublicacao { get; set; }
         public bool Visivel { get; set; }
         public List<String> Tags { get; set; }
+        public int QtdeComentarios { get; set; }
 
+        //Cadastrar Comentario
         [DisplayName("Nome")]
         [StringLength(100,ErrorMessage = "O campo Nome deve possuir no máximo {1} caracteres!")]
         [Required(ErrorMessage ="O campo Nome é obrigatório!")]
@@ -37,5 +41,9 @@ namespace BlogXandy.Web.Models.Blog
         [StringLength(100, ErrorMessage = "O campo Página deve possuir no máximo {1} caracteres!")]
         public String ComentarioPaginaWeb { get; set; }
 
+        //Listar Comentario
+        public int PaginaAtual { get; set; }
+        public int TotalPaginas { get; set; }
+        public IList<Comentario> Comentario { get; set; }
     }
 }

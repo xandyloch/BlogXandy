@@ -16,6 +16,7 @@ namespace BlogXandy.db.Classes
         public string PaginaWeb { get; set; }
         public string Nome { get; set; }
         public int IdPost { get; set; }
+        public DateTime DataHora { get; set; }
         
 
         public virtual Post Post { get; set; }

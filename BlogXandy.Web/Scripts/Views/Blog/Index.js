@@ -9,4 +9,11 @@
             e.preventDefault();
         }
     });
+
+
+    $('.excluir-comentario').on('click', function (e) {
+        if (!confirm('Deseja realmente excluir esse comentário?')) {
+            e.preventDefault();
+        }
+    });
 });

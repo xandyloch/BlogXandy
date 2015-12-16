@@ -21,7 +21,7 @@
             <h2>
                 @Html.ActionLink(item.Titulo, "Post", "Blog", new
        {
-           id = item.Id,
+           id = item.id,
            ano = item.DataPublicacao.Year,
            mes = item.DataPublicacao.Month,
            dia = item.DataPublicacao.Day,
@@ -34,13 +34,20 @@
                 <div class="div-imagem icone-autor"></div>
                 @item.Autor
                 <div class="div-imagem icone-comentario"></div>
-                @item.comentario.Count
+                <a href="@Url.Action( "Post", "Blog", new
+           {
+               id = item.id,
+               ano = item.DataPublicacao.Year,
+               mes = item.DataPublicacao.Month,
+               dia = item.DataPublicacao.Day,
+               titulo = item.Titulo
+           })#comentarios">@item.QtdeComentarios</a>
                 @if (Request.IsAuthenticated) { 
                 <div class="div-imagem icone-editar"></div>
-                @Html.ActionLink("Editar", "EditarPost", "Administracao", new { id = item.Id },
+                @Html.ActionLink("Editar", "EditarPost", "Administracao", new { id = item.id },
                                                                 new { @class = "editar-post" })
                 <div class="div-imagem icone-excluir"></div>
-                @Html.ActionLink("Excluir", "ExcluirPost", "Administracao", new { id = item.Id },
+                @Html.ActionLink("Excluir", "ExcluirPost", "Administracao", new { id = item.id },
                                                                 new { @class = "excluir-post" })
                 }
             </div>
@@ -52,7 +59,7 @@
               <div>
                 @Html.ActionLink("Continue lendo...", "Post", "Blog", new
             {
-                id = item.Id,
+                id = item.id,
                 ano = item.DataPublicacao.Year,
                 mes = item.DataPublicacao.Month,
                 dia = item.DataPublicacao.Day,

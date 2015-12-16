@@ -45,7 +45,11 @@ namespace BlogXandy.db.Mapeamentos
 		.HasMaxLength(100)
                 .IsRequired();
 
- 	       Property(x => x.IdPost)
+            Property(x => x.DataHora)
+                .HasColumnName("DATAHORA")
+                .IsRequired();
+
+            Property(x => x.IdPost)
               .HasColumnName("IDPOST")
               .IsRequired();
 

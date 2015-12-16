@@ -8,7 +8,7 @@ namespace BlogXandy.Web.Models.Blog
 {
     public class ListarPostsViewModel
     {
-        public List<Post> Posts { get; set; }
+        public List<DetalharPostViewModel> Posts { get; set; }
        // public List<String> Tags { get; set; }
         public int PaginaAtual { get; set; }
         public int TotalPaginas { get; set; }
