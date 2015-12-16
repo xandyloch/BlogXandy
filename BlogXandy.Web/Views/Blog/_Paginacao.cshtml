@@ -1,0 +1,22 @@
+﻿@model BlogXandy.Web.Models.Blog.ListarPostsViewModel
+
+@if (Model.TotalPaginas > 1)
+{
+    var proximaPagina = Model.PaginaAtual + 1;
+    var paginaAnterior = Model.PaginaAtual - 1;
+
+    <div class="pagination">
+        @if (Model.PaginaAtual > 1)
+        {
+            @Html.ActionLink("Página Anterior", "Index", "Blog", new { pagina = paginaAnterior , tag = Model.tag, pesquisa = Model.Pesquisa}, new { rel = "prev" })
+
+
+        }
+       &nbsp;&nbsp;&nbsp;
+      @if (Model.PaginaAtual < Model.TotalPaginas)
+      {
+        @Html.ActionLink("Próxima Página", "Index", "Blog", new { pagina = proximaPagina, tag = Model.tag, pesquisa = Model.Pesquisa }, new { rel = "prev" })
+      }
+
+    </div>
+}

@@ -1,0 +1,32 @@
+﻿@model List<BlogXandy.db.Classes.Usuario>
+@{
+    ViewBag.Title = "Usuários";
+}
+
+<h2>Usuários</h2>
+
+
+
+
+
+
+@foreach (var item in Model)
+{
+    <div><h2>@item.Nome</h2></div>
+    <div>@item.Login</div>
+    
+    @Html.ActionLink("Editar", "EditarUsuario", "Usuario", new { id = item.Id },
+                                                                new { @class = "editar-post" })
+
+   <br /> 
+
+
+
+    @Html.ActionLink("Excluir", "ExcluirUsuario", "Usuario", new { id = item.Id },
+                                                                new { @class = "editar-post" })
+
+}
+
+
+
+
