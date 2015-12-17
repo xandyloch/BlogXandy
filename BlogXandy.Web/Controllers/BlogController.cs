@@ -18,7 +18,7 @@ namespace BlogXandy.Web.Controllers
             var registroPorPagina = 10;
 
             var conexaoBanco = new ConexaoBanco();
-
+  
             var posts = (from p in conexaoBanco.Posts
                                 where p.Visivel
                                 //orderby p.DataPublicacao descending
