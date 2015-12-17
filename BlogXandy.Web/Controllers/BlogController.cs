@@ -174,5 +174,10 @@ namespace BlogXandy.Web.Controllers
             PreencherViewModel(post, viewModel, null);
             return View(viewModel);
         }
+
+        public ActionResult _PaginacaoPost()
+        {
+            return PartialView();
+        }
     }
 }

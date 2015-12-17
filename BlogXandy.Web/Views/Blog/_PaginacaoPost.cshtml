@@ -1,0 +1,30 @@
+﻿@model BlogXandy.Web.Models.Blog.DetalharPostViewModel
+
+@if (Model.TotalPaginas > 1)
+{
+    var proximaPagina = Model.PaginaAtual + 1;
+    var paginaAnterior = Model.PaginaAtual - 1;
+
+    <div class="pagination">
+        @if (Model.PaginaAtual > 1)
+        {
+            <a href="@Url.Action("Post", new  { id = Model.id,
+                                                pagina = paginaAnterior})#comentarios" rel="prev">Página Anterior</a>
+
+            if(proximaPagina != -1)
+            {
+                <text>|</text>
+            }
+        }
+        
+         @if (proximaPagina != -1)
+         {
+
+            <a href="@Url.Action("Post", new  { id = Model.id,
+                                                pagina = proximaPagina})#comentarios" rel="prev">Próxima Página</a>
+
+             
+      }
+
+    </div>
+}
